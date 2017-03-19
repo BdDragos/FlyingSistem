@@ -13,3 +13,5 @@ The application can be used by tourism agencies and has the following functional
 -Buying: The employee can buy tickets for the clients. After a successful purchase, the flight database will update its current flights, and if a flight remains without free seats, it won't be shown anymore to the rest of the employees
 
 -Logout window
+
+The program connects to a MySQL database made in XAMPP. The language used is Java.
