@@ -13,16 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Main
 {
-
-    static Connection connection;
     @Bean
-    public static void execute(String sql) throws SQLException {
+    public static void execute(String sql) throws SQLException
+    {
         System.out.println("Executing sql " + sql);
+        System.out.println(new FlightRepo().getAll());
     }
     @Bean
-    public static void main(String[] args)  throws ClassNotFoundException, SQLException {
-
-        System.out.println(new FlightRepo().getAll());
-        System.out.println(new FlightRepo().getAll());
+    public static void main(String[] args)  throws ClassNotFoundException, SQLException
+    {
+        execute("done");
     }
 }

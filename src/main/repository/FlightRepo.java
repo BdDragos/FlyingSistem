@@ -25,15 +25,24 @@ public class FlightRepo
 
     public FlightRepo() throws SQLException {
 
-        try {
-            connection = DriverManager.getConnection("JDBC:mysql://localhost:8080/flights", "root", "");
-            statement = connection.createStatement();
-        }
-        catch(SQLException se)
+        String url = "jdbc:mysql://localhost:8080/";
+        String user = "root";
+        String password = "";
 
+        try
         {
-            se.printStackTrace();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Connection con = DriverManager.getConnection(url, user, password);
+
+            Statement stt = con.createStatement();
+            stt.execute("CREATE DATABASE IF NOT EXISTS flights");
+            stt.execute("USE flights");
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         String query = "select * from flight";
         ResultSet result = statement.executeQuery(query);
         while(result.next())
@@ -46,6 +55,7 @@ public class FlightRepo
             Flight flight = new Flight(id,dest,airp,frees,dateh);
 
             flights.add(flight);
+            System.out.println("Done2");
         }
     }
     @Bean
