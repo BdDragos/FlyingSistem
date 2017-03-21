@@ -19,7 +19,7 @@ public class FlightRepo
 
     public FlightRepo() throws SQLException {
 
-        String url = "jdbc:mysql://127.0.0.1:8080/flights";
+        String url = "jdbc:mysql://localhost:3306/flights";
         String user = "root";
         String password = "";
         Connection connection;
