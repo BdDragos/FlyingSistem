@@ -14,17 +14,15 @@ import org.springframework.context.annotation.Configuration;
 public class FlightRepo
 {
     private List<Flight> flights = new ArrayList<Flight>();
-
-    private Connection connection;
     private Statement statement;
 
 
     public FlightRepo() throws SQLException {
 
-        String url = "jdbc:mysql://localhost:8080/";
+        String url = "jdbc:mysql://127.0.0.1:8080/flights";
         String user = "root";
         String password = "";
-
+        Connection connection;
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -33,6 +31,7 @@ public class FlightRepo
             Statement statement = connection.createStatement();
             statement.execute("CREATE DATABASE IF NOT EXISTS flights");
             statement.execute("USE flights");
+            System.out.println(connection.getCatalog());
         }
         catch (Exception e)
         {
@@ -68,9 +67,7 @@ public class FlightRepo
             if(flight.getDestination().equals(dest) && flight.getDatehour().equals(data))
                 return flight;
         }
-        Flight f = new Flight(0,"","",0,null);
-        return f;
-
+        return null;
     }
 
     @Bean
@@ -80,7 +77,6 @@ public class FlightRepo
         {
             if(flight.getDestination().equals(f.getDestination()) && flight.getDatehour().equals(f.getDatehour())) {
                 f.setFreeseats(flight.getFreeseats());
-                String destination = flight.getDestination();
                 String q = "update \"Flights\" set  \"Destination\"='" + flight.getDestination() + "',\"Airport\"='" + flight.getAirport() + "', \"FreeSeats\"='" + flight.getFreeseats() + "' where \"Id\"='" + f.getFlightId() + "'";
                 statement.executeUpdate(q);
             }

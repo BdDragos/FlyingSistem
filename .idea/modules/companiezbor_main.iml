@@ -22,7 +22,9 @@
           <root url="jar://D:/Files/mysql-connector-java-6.0.6.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/mysql-connector-java-6.0.6-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>
