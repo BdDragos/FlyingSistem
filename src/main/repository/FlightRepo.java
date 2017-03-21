@@ -28,7 +28,7 @@ public class FlightRepo
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(url, user, password);
 
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             statement.execute("CREATE DATABASE IF NOT EXISTS flights");
             statement.execute("USE flights");
             System.out.println(connection.getCatalog());
@@ -37,7 +37,7 @@ public class FlightRepo
         {
             e.printStackTrace();
         }
-        String query = "select * from flight";
+        String query = "select * from routes";
         ResultSet result = statement.executeQuery(query);
         while(result.next())
         {
@@ -77,7 +77,7 @@ public class FlightRepo
         {
             if(flight.getDestination().equals(f.getDestination()) && flight.getDatehour().equals(f.getDatehour())) {
                 f.setFreeseats(flight.getFreeseats());
-                String q = "update \"Flights\" set  \"Destination\"='" + flight.getDestination() + "',\"Airport\"='" + flight.getAirport() + "', \"FreeSeats\"='" + flight.getFreeseats() + "' where \"Id\"='" + f.getFlightId() + "'";
+                String q = "update \"routes\" set  \"Destination\"='" + flight.getDestination() + "',\"Airport\"='" + flight.getAirport() + "', \"FreeSeats\"='" + flight.getFreeseats() + "' where \"Id\"='" + f.getFlightId() + "'";
                 statement.executeUpdate(q);
             }
         }
