@@ -60,6 +60,17 @@ public class Flight
         this.destination = destination;
     }
 
+
+    public int getFlightId()
+    {
+        return flightId;
+    }
+
+    public void setFlightId(int flightId)
+    {
+        this.flightId = flightId;
+    }
+
     @Override
     public String toString() {
         return "Zboruri{" +
@@ -70,11 +81,4 @@ public class Flight
                 '}';
     }
 
-    public int getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(int flightId) {
-        this.flightId = flightId;
-    }
 }

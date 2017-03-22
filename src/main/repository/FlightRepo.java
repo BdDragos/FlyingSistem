@@ -15,21 +15,19 @@ public class FlightRepo
 {
     private List<Flight> flights = new ArrayList<Flight>();
     private Statement statement;
-
+    private Connection connection;
 
     public FlightRepo() throws SQLException {
 
         String url = "jdbc:mysql://localhost:3306/flights";
         String user = "root";
         String password = "";
-        Connection connection;
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(url, user, password);
 
             statement = connection.createStatement();
-            statement.execute("CREATE DATABASE IF NOT EXISTS flights");
             statement.execute("USE flights");
             System.out.println(connection.getCatalog());
         }
@@ -50,7 +48,6 @@ public class FlightRepo
 
             flights.add(flight);
         }
-        System.out.println("Done2");
     }
     @Bean
     public List<Flight> getAll()
@@ -58,29 +55,72 @@ public class FlightRepo
         return flights;
     }
 
-
     @Bean
     public Flight findByDestinationAndDate(String dest, Date data)
     {
         for(Flight flight : flights)
-        {
             if(flight.getDestination().equals(dest) && flight.getDatehour().equals(data))
                 return flight;
-        }
+
         return null;
     }
 
     @Bean
-    public void updateFlight(Flight flight) throws SQLException
+    public void updateFlight(Flight flight)
     {
         for (Flight f: flights)
         {
-            if(flight.getDestination().equals(f.getDestination()) && flight.getDatehour().equals(f.getDatehour())) {
-                f.setFreeseats(flight.getFreeseats());
-                String q = "update \"routes\" set  \"Destination\"='" + flight.getDestination() + "',\"Airport\"='" + flight.getAirport() + "', \"FreeSeats\"='" + flight.getFreeseats() + "' where \"Id\"='" + f.getFlightId() + "'";
-                statement.executeUpdate(q);
+            if(f.getFlightId() == flight.getFlightId())
+            {
+                try
+                {
+                    String query = "update routes set FreeSeats = ? where Id = ?";
+                    PreparedStatement preparedStmt = connection.prepareStatement(query);
+                    int number = flight.getFreeseats() - 1;
+                    int id = flight.getFlightId();
+                    preparedStmt.setInt   (1, number);
+                    preparedStmt.setInt(2, id);
+                    preparedStmt.executeUpdate();
+                    flights.get(f.getFlightId()-1).setFreeseats(f.getFreeseats()-1);
+                }
+                catch (Exception e)
+                {
+                    System.err.println("Got an exception! ");
+                    System.err.println(e.getMessage());
+                }
             }
         }
+    }
+    @Bean
+    public void deleteFlight(int id)
+    {
+        for (Flight f: flights)
+        {
+            if (f.getFlightId() == id)
+            {
+                try
+                {
+                    String query = "delete from routes where Id = ?";
+                    PreparedStatement preparedStmt = connection.prepareStatement(query);
+                    preparedStmt.setInt(1, id);
+                    preparedStmt.execute();
+                    flights.remove(id);
+                }
+                catch (Exception e)
+                {
+                    System.err.println("Got an exception! ");
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+    }
+    @Bean
+    public Flight findById(int id)
+    {
+        for (Flight f: flights)
+            if (f.getFlightId() == id)
+                return f;
+        return null;
     }
 
 }
