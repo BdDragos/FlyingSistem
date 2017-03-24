@@ -74,12 +74,10 @@ public class FlightRepo
             {
                 try
                 {
-                    String query = "update routes set FreeSeats = ? where Id = ?";
+                    String query = "update routes set FreeSeats=FreeSeats-1 where Id = ?";
                     PreparedStatement preparedStmt = connection.prepareStatement(query);
-                    int number = flight.getFreeseats() - 1;
                     int id = flight.getFlightId();
-                    preparedStmt.setInt   (1, number);
-                    preparedStmt.setInt(2, id);
+                    preparedStmt.setInt   (1, id);
                     preparedStmt.executeUpdate();
                     flights.get(f.getFlightId()-1).setFreeseats(f.getFreeseats()-1);
                 }
