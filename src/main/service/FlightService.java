@@ -1,12 +1,11 @@
 package service;
 
-import Observer.Observable;
+import observer.Observable;
 import model.Flight;
 import repository.FlightRepo;
-import Observer.Observer;
+import observer.Observer;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 /**
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 public class FlightService implements Observable<Flight>
 {
     private FlightRepo repo;
-    protected List <Observer<Flight>> observers = new ArrayList<Observer<Flight>>();
+    private List <Observer<Flight>> observers = new ArrayList<Observer<Flight>>();
 
     public FlightService(FlightRepo frep)
     {

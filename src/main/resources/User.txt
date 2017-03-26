@@ -1,0 +1,4 @@
+Alex|qwerty
+John|12345
+admin|admin
+andrei|arecibo

@@ -6,7 +6,7 @@ The application can be used by tourism agencies and has the following functional
 
 -Login window: The agency employee can login in his account.
 
--Main window: After a successful, a new window will open that shows information about current flights (destination,the date and hour of departure and the number of available seats remaining)
+-main.Main window: After a successful, a new window will open that shows information about current flights (destination,the date and hour of departure and the number of available seats remaining)
 
 -Searching: The employee can search for a flight by introducing the destination and the date of departure. A new window will open, showing the flights that match the search parameters
 
