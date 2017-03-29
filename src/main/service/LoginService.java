@@ -34,7 +34,7 @@ public class LoginService
                 String sessionID = login();
                 if (sessionID.compareTo("error")!=0)
                 {
-                    loginManager.authenticated(sessionID);
+                    loginManager.authenticated();
                 }
                 else
                 {

@@ -9,13 +9,13 @@ import javafx.scene.control.TabPane;
 import repository.FlightRepo;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+
+import java.io.*;
 import java.sql.SQLException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import service.LoginService;
-import java.io.File;
 import java.net.URL;
 
 @Configuration
@@ -26,6 +26,8 @@ public class Main extends Application
     private Stage primaryStage;
     private AnchorPane rootLayout1;
     private TabPane rootLayout2;
+
+
     @Bean
     private static void execute(String sql) throws SQLException
     {
@@ -38,16 +40,30 @@ public class Main extends Application
         launch(args);
     }
 
+    public void startserver()
+    {
+        LoginServer server = null;
+        try
+        {
+            server = new LoginServer();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        server.runServer(this);
+    }
+
     @Override
     public void start(Stage primaryStage) throws ClassNotFoundException, SQLException
     {
         this.primaryStage = primaryStage;
         loader = new FXMLLoader();
         loader2 = new FXMLLoader();
-        LoginView();
+        startserver();
     }
 
-    public void authenticated(String perm)
+    public void authenticated()
     {
         MainView();
     }
@@ -87,7 +103,6 @@ public class Main extends Application
             Scene scene = new Scene(rootLayout2);
             primaryStage.setScene(scene);
             primaryStage.show();
-
         }
 
         catch (IOException ex)
@@ -95,4 +110,5 @@ public class Main extends Application
             ex.printStackTrace();
         }
     }
+
 }
