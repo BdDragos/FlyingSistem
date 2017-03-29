@@ -8,9 +8,6 @@ import observer.Observer;
 import java.sql.Date;
 import java.util.List;
 import java.util.ArrayList;
-/**
- * Created by Dragos on 3/21/2017.
- */
 public class FlightService implements Observable<Flight>
 {
     private FlightRepo repo;
@@ -29,7 +26,7 @@ public class FlightService implements Observable<Flight>
     public List<Flight> getAllFlights()
     {
         List<Flight> s = new ArrayList<Flight>();
-        Iterable<Flight> list=repo.getAll();
+        List<Flight> list=repo.getAll();
         for (Flight f:list)
             s.add(f);
         notifyObservers();
