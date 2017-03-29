@@ -15,7 +15,7 @@ public class LoginServer
 
     private static final String CORRECT_PASSWORD = "Java";
 
-    SSLServerSocketFactory socketFactory;
+    private SSLServerSocketFactory socketFactory;
     private SSLServerSocket serverSocket;
 
     public LoginServer() throws Exception
