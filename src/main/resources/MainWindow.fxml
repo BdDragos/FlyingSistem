@@ -5,7 +5,7 @@
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="619.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controller.FlightControl">
   <tabs>
-    <Tab text="main.Main Table">
+    <Tab text="Main Table">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="416.0" prefWidth="600.0">
                <children>
