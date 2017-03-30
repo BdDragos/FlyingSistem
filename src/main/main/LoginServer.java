@@ -25,10 +25,9 @@ public class LoginServer
         serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
     }
 
-    public void runServer(final Main loginManager)
-    {
-        try
-            {
+    public void runServer(final Main loginManager) {
+        while (true) {
+            try {
                 System.err.println("Waiting for connection...");
                 SSLSocket socket = (SSLSocket) serverSocket.accept();
                 System.out.println("Connected");
@@ -38,14 +37,10 @@ public class LoginServer
                 PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                 String userName = input.readLine();
                 String password = input.readLine();
-                System.out.println(userName);
-                System.out.println(password);
-                if (userName.equals(CORRECT_USER_NAME) && password.equals(CORRECT_PASSWORD))
-                {
-                    loginManager.authenticated();
-                }
-                else
-                {
+                if (userName.equals(CORRECT_USER_NAME) && password.equals(CORRECT_PASSWORD)) {
+                    //loginManager.authenticated();
+                    output.println("Valid");
+                } else {
                     output.println("Invalid");
                 }
                 output.close();
@@ -56,4 +51,5 @@ public class LoginServer
                 ioException.printStackTrace();
             }
         }
+    }
     }

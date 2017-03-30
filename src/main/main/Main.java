@@ -61,6 +61,7 @@ public class Main extends Application
         loader = new FXMLLoader();
         loader2 = new FXMLLoader();
         startserver();
+        //LoginView();
     }
 
     public void authenticated()
