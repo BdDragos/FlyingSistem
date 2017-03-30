@@ -19,13 +19,15 @@ import service.LoginService;
 import java.net.URL;
 
 @Configuration
-public class Main extends Application
+public class Main
 {
+    /*
     private FXMLLoader loader;
     private FXMLLoader loader2;
     private Stage primaryStage;
     private AnchorPane rootLayout1;
     private TabPane rootLayout2;
+    */
 
 
     @Bean
@@ -37,7 +39,9 @@ public class Main extends Application
     @Bean
     public static void main(String[] args) throws ClassNotFoundException, SQLException
     {
-        launch(args);
+        Main mn = new Main();
+        mn.startserver();
+
     }
 
     public void startserver()
@@ -54,16 +58,7 @@ public class Main extends Application
         server.runServer(this);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws ClassNotFoundException, SQLException
-    {
-        this.primaryStage = primaryStage;
-        loader = new FXMLLoader();
-        loader2 = new FXMLLoader();
-        startserver();
-        //LoginView();
-    }
-
+    /*
     public void authenticated()
     {
         MainView();
@@ -111,5 +106,6 @@ public class Main extends Application
             ex.printStackTrace();
         }
     }
+    */
 
 }

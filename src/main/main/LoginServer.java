@@ -1,5 +1,7 @@
 package main;
 
+import service.LoginService;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -11,18 +13,15 @@ import java.io.*;
  */
 public class LoginServer
 {
-    private static final String CORRECT_USER_NAME = "Java";
-
-    private static final String CORRECT_PASSWORD = "Java";
-
+    private LoginService logmanager;
     private SSLServerSocketFactory socketFactory;
     private SSLServerSocket serverSocket;
 
     public LoginServer() throws Exception
     {
-        this.socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory
-                .getDefault();
+        socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
         serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
+        logmanager = new LoginService();
     }
 
     public void runServer(final Main loginManager) {
@@ -37,7 +36,11 @@ public class LoginServer
                 PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                 String userName = input.readLine();
                 String password = input.readLine();
-                if (userName.equals(CORRECT_USER_NAME) && password.equals(CORRECT_PASSWORD)) {
+                System.out.println(userName);
+                System.out.println(password);
+                String validare = logmanager.initManager(userName,password);
+                if (validare.compareTo("valid") == 0)
+                {
                     //loginManager.authenticated();
                     output.println("Valid");
                 } else {
