@@ -15,3 +15,6 @@ The application can be used by tourism agencies and has the following functional
 -Logout window
 
 The program connects to a MySQL database made in XAMPP. The language used is Java.
+
+
+This following repository represents the server part of the entire program.
