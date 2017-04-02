@@ -1,10 +1,10 @@
 package model;
+import java.io.Serializable;
 import java.util.Date;
-/**
- * Created by Dragos on 3/15/2017.
- */
-public class Flight
+
+public class Flight implements Serializable
 {
+    private static final long serialVersionUID = 5950169519310163575L;
     private int flightId;
     private String destination;
     private String airport;

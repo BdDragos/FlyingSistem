@@ -18,11 +18,6 @@ public class FlightService implements Observable<Flight>
         this.repo = frep;
     }
 
-    public FlightService()
-    {
-
-    }
-
     public List<Flight> getAllFlights()
     {
         List<Flight> s = new ArrayList<Flight>();

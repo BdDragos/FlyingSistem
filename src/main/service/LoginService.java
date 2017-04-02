@@ -1,9 +1,5 @@
 package service;
 
-/**
- * Created by Dragos on 3/23/2017.
- */
-
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,7 +23,6 @@ public class LoginService
                 }
                 else
                 {
-                    showErrorMessage("Nume invalid sau parola invalida");
                     return "invalid";
                 }
     }

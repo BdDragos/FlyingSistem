@@ -1,111 +1,59 @@
-/**
- * Created by Dragos on 3/16/2017.
- */
-
 package main;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TabPane;
-import repository.FlightRepo;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 
 import java.io.*;
 import java.sql.SQLException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import javafx.scene.layout.AnchorPane;
-import service.LoginService;
-import java.net.URL;
 
-@Configuration
+
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+
 public class Main
 {
-    /*
-    private FXMLLoader loader;
-    private FXMLLoader loader2;
-    private Stage primaryStage;
-    private AnchorPane rootLayout1;
-    private TabPane rootLayout2;
-    */
+    private SSLServerSocketFactory socketFactory;
+    private SSLServerSocket serverSocket;
+    private SSLSocket socket;
 
-
-    @Bean
-    private static void execute(String sql) throws SQLException
-    {
-        System.out.println("Executing sql " + sql);
-        System.out.println(new FlightRepo().getAll());
-    }
-    @Bean
     public static void main(String[] args) throws ClassNotFoundException, SQLException
     {
         Main mn = new Main();
         mn.startserver();
-
     }
-
     public void startserver()
     {
-        LoginServer server = null;
-        try
-        {
-            server = new LoginServer();
+        try {
+            int i = 1;
+            socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
+            System.err.println("Waiting for connection...");
+
+            while (true)
+            {
+                socket = (SSLSocket) serverSocket.accept();
+                String[] cipherSuites = socketFactory.getSupportedCipherSuites();
+                socket.setEnabledCipherSuites(cipherSuites);
+
+                System.out.println("Connection established: " + " " + i);
+                Runnable r = new ClientAdministrator(socket);
+                Thread t = new Thread(r);
+                t.start();
+                i++;
+            }
         }
-        catch (Exception e)
+        catch(IOException ex)
         {
+            System.err.println("Eroare :"+ex.getMessage());
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
-        server.runServer(this);
-    }
-
-    /*
-    public void authenticated()
-    {
-        MainView();
-    }
-
-    private void LoginView() throws ClassNotFoundException, SQLException
-    {
-        try
+        finally
         {
-            String pathToFxml = "src/main/resources/LoginWindow.fxml";
-            URL fxmlUrl = new File(pathToFxml).toURI().toURL();
-            loader.setLocation(fxmlUrl);
-
-            rootLayout1 = loader.load();
-            Scene scene = new Scene(rootLayout1);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-
-            LoginService controller = loader.getController();
-            controller.initManager(this);
-        }
-
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
+            try{socket.close();}
+            catch(IOException ex2){}
         }
     }
-
-    private void MainView()
-    {
-        try
-        {
-            String pathToFxml = "src/main/resources/MainWindow.fxml";
-            URL fxmlUrl = new File(pathToFxml).toURI().toURL();
-            loader2.setLocation(fxmlUrl);
-
-            rootLayout2 = loader2.load();
-            Scene scene = new Scene(rootLayout2);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        }
-
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-    */
 
 }
+
+

@@ -7,10 +7,7 @@ import model.Flight;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 public class FlightRepo
 {
     private List<Flight> flights = new ArrayList<Flight>();
@@ -29,7 +26,6 @@ public class FlightRepo
 
             statement = connection.createStatement();
             statement.execute("USE flights");
-            System.out.println(connection.getCatalog());
         }
         catch (Exception e)
         {
@@ -49,13 +45,13 @@ public class FlightRepo
             flights.add(flight);
         }
     }
-    @Bean
+
     public List<Flight> getAll()
     {
         return flights;
     }
 
-    @Bean
+
     public Flight findByDestinationAndDate(String dest, Date data)
     {
         for(Flight flight : flights)
@@ -65,7 +61,7 @@ public class FlightRepo
         return null;
     }
 
-    @Bean
+
     public void updateFlight(Flight flight)
     {
         for (Flight f: flights)
@@ -90,7 +86,7 @@ public class FlightRepo
             }
         }
     }
-    @Bean
+
     public void deleteFlight(int id)
     {
         for (Flight f: flights)
@@ -113,7 +109,7 @@ public class FlightRepo
             }
         }
     }
-    @Bean
+
     public Flight findById(int id)
     {
         for (Flight f: flights)
