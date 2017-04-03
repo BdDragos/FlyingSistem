@@ -29,11 +29,19 @@ public class FlightService implements Observable<Flight>
 
     }
 
-    public int buyFlight(Flight f)
+    public int buyFlight(int idf, String client,int noticket,String address)
     {
-        repo.updateFlight(f);
-        Flight cop = repo.findById(f.getFlightId());
-        if (cop.getFreeseats() == f.getFreeseats() - 1)
+        Flight cop = repo.findById(idf);
+        int nrorig = cop.getFreeseats();
+        if (nrorig < noticket)
+        {
+            return 1;
+        }
+
+        repo.updateFlight(cop,client,noticket,address);
+        cop = repo.findById(idf);
+
+        if (cop.getFreeseats() == nrorig - noticket)
         {
             notifyObservers();
             return 1;

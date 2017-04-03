@@ -55,7 +55,6 @@ public class FlightRepo
     public List<Flight> findByDestinationAndDate(String dest, Date data)
     {
         List<Flight> rez = new ArrayList<Flight>();
-        System.out.println(data);
         for(Flight flight : flights)
             if(flight.getDestination().equals(dest) && flight.getDatehour().compareTo(data) == 0)
                 rez.add(flight);
@@ -74,7 +73,6 @@ public class FlightRepo
     public List<Flight> findByDate(Date data)
     {
         List<Flight> rez = new ArrayList<Flight>();
-        System.out.println(data);
         for(Flight flight : flights)
             if(flight.getDatehour().compareTo(data) == 0)
                 rez.add(flight);
@@ -82,7 +80,7 @@ public class FlightRepo
     }
 
 
-    public void updateFlight(Flight flight)
+    public void updateFlight(Flight flight,String client,int noticket,String address)
     {
         for (Flight f: flights)
         {
@@ -90,13 +88,31 @@ public class FlightRepo
             {
                 try
                 {
-                    String query = "update routes set FreeSeats=FreeSeats-1 where Id = ?";
+                    String query = "update routes set FreeSeats=FreeSeats-? where Id = ?";
                     PreparedStatement preparedStmt = connection.prepareStatement(query);
                     int id = flight.getFlightId();
-                    id=id+1;
-                    preparedStmt.setInt(1, id);
+                    preparedStmt.setInt(1, noticket);
+                    preparedStmt.setInt(2, id);
                     preparedStmt.executeUpdate();
-                    flights.get(f.getFlightId()).setFreeseats(f.getFreeseats()-1);
+
+                    int bilete =  flights.get(flight.getFlightId()-1).getFreeseats();
+                    flights.get(flight.getFlightId()-1).setFreeseats(bilete-noticket);
+                    String s = flight.toString();
+                    if (flights.get(flight.getFlightId()-1).getFreeseats() == 0)
+                    {
+                        deleteFlight(flight.getFlightId());
+                    }
+
+                    String query2 = " insert into clients (Name,Address,NoTickets,Flight)"
+                            + " values (?, ?, ?, ?)";
+
+                    PreparedStatement preparedStmt2 = connection.prepareStatement(query2);
+                    preparedStmt2.setString (1, client);
+                    preparedStmt2.setString (2, address);
+                    preparedStmt2.setInt   (3, noticket);
+                    preparedStmt2.setString   (4, s);
+                    preparedStmt2.execute();
+
                 }
                 catch (Exception e)
                 {

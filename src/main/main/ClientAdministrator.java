@@ -81,11 +81,10 @@ class ClientAdministrator implements Runnable
 
                         List<Flight> rez;
 
-                        SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = sdf1.parse(depart);
                         java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-                        System.out.println(sqlStartDate);
-                        rez = repo.findByDestinationAndDate(destin,sqlStartDate);
+                        rez = ctr.findByDestinationAndDate(destin,sqlStartDate);
                         String bigString = "";
                         for (Flight i:rez)
                             bigString = bigString + "/" + i.getFlightId() + "," + i.getDestination() + "," + i.getAirport() + "," + i.getFreeseats() + "," + i.getDatehour();
@@ -100,12 +99,10 @@ class ClientAdministrator implements Runnable
                     try {
                         String depart = in.readLine();
                         List<Flight> rez;
-
-                        SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = sdf1.parse(depart);
                         java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
-                        System.out.println(sqlStartDate);
-                        rez = repo.findByDate(sqlStartDate);
+                        rez = ctr.findByDate(sqlStartDate);
                         String bigString = "";
                         for (Flight i : rez)
                             bigString = bigString + "/" + i.getFlightId() + "," + i.getDestination() + "," + i.getAirport() + "," + i.getFreeseats() + "," + i.getDatehour();
@@ -120,20 +117,40 @@ class ClientAdministrator implements Runnable
                     String destin = in.readLine();
                     List<Flight> rez;
 
-                    rez = repo.findByDestination(destin);
+                    rez = ctr.findByDestination(destin);
                     String bigString = "";
                     for (Flight i:rez)
                         bigString = bigString + "/" + i.getFlightId() + "," + i.getDestination() + "," + i.getAirport() + "," + i.getFreeseats() + "," + i.getDatehour();
                     out.println(bigString);
                 }
+                if (receive.equals("Buy"))
+                {
+                    String id = in.readLine();
+                    String clientname = in.readLine();
+                    String nrtickets = in.readLine();
+                    String address = in.readLine();
+
+                    int ok = ctr.buyFlight(Integer.parseInt(id),clientname,Integer.parseInt(nrtickets),address);
+                    if (ok == 1)
+                    {
+                        out.println("Primit");
+                    }
+                    else
+                    {
+                        out.println("Invalid");
+                    }
+                }
             }
             System.out.println("closing...");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e)
+        {
+            System.out.println("IO Exception");
         }  finally {
             try {
+                in.close();
+                out.close();
                 socket.close();
-                System.exit(0);
+                System.out.println("The connection with a client was closed");
             } catch (IOException e) {
                 System.err.println("Socket not closed");
             }
