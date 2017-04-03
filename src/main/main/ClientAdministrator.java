@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 /*
- * Created by Dragos on 4/2/2017.
+ * Created by Dragos on 4/2/2017
  */
 class ClientAdministrator implements Runnable
 {
