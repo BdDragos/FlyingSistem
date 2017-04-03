@@ -5,7 +5,7 @@ import model.Flight;
 import repository.FlightRepo;
 import observer.Observer;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 public class FlightService implements Observable<Flight>
@@ -49,12 +49,31 @@ public class FlightService implements Observable<Flight>
         if (repo.findById(c.getFlightId()) == null)
             notifyObservers();
     }
-    public Flight findByDestination(String dest,Date dat)
+    public List<Flight> findByDestinationAndDate(String dest, java.sql.Date dat)
     {
-        Flight ret = repo.findByDestinationAndDate(dest,dat);
-        if (ret != null)
+        List<Flight> rez;
+        rez = repo.findByDestinationAndDate(dest,dat);
+        if (rez != null)
             notifyObservers();
-        return ret;
+        return rez;
+    }
+
+    public List<Flight> findByDestination(String dest)
+    {
+        List<Flight> rez;
+        rez = repo.findByDestination(dest);
+        if (rez != null)
+            notifyObservers();
+        return rez;
+    }
+
+    public List<Flight> findByDate(java.sql.Date dat)
+    {
+        List<Flight> rez;
+        rez = repo.findByDate(dat);
+        if (rez != null)
+            notifyObservers();
+        return rez;
     }
 
 

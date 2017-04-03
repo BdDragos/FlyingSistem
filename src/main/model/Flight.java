@@ -1,6 +1,6 @@
 package model;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 public class Flight implements Serializable
 {
@@ -9,7 +9,7 @@ public class Flight implements Serializable
     private String destination;
     private String airport;
     private int freeseats;
-    private Date datehour;
+    private java.sql.Date datehour;
 
     public Flight(int id, String destin, String airp, int frst, Date dh)
     {

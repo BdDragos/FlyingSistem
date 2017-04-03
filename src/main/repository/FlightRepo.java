@@ -1,12 +1,12 @@
 package repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import model.Flight;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FlightRepo
 {
@@ -52,13 +52,33 @@ public class FlightRepo
     }
 
 
-    public Flight findByDestinationAndDate(String dest, Date data)
+    public List<Flight> findByDestinationAndDate(String dest, Date data)
     {
+        List<Flight> rez = new ArrayList<Flight>();
+        System.out.println(data);
         for(Flight flight : flights)
-            if(flight.getDestination().equals(dest) && flight.getDatehour().equals(data))
-                return flight;
+            if(flight.getDestination().equals(dest) && flight.getDatehour().compareTo(data) == 0)
+                rez.add(flight);
+        return rez;
+    }
 
-        return null;
+    public List<Flight> findByDestination(String dest)
+    {
+        List<Flight> rez = new ArrayList<Flight>();
+        for(Flight flight : flights)
+            if(flight.getDestination().equals(dest))
+                rez.add(flight);
+        return rez;
+    }
+
+    public List<Flight> findByDate(Date data)
+    {
+        List<Flight> rez = new ArrayList<Flight>();
+        System.out.println(data);
+        for(Flight flight : flights)
+            if(flight.getDatehour().compareTo(data) == 0)
+                rez.add(flight);
+        return rez;
     }
 
 
