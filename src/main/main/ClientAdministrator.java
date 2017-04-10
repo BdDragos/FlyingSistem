@@ -1,7 +1,6 @@
 package main;
 
 import model.Flight;
-import repository.FlightRepo;
 import service.FlightService;
 
 import javax.net.ssl.SSLSocket;
@@ -12,21 +11,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 /*
  * Created by Dragos on 4/2/2017
  */
 class ClientAdministrator implements Runnable
 {
     private List<Flight> lista = new ArrayList<Flight>();
-    private FlightRepo repo = new FlightRepo();
-    private FlightService ctr = new FlightService(repo);
+    private FlightService ctr;
     private SSLSocket socket;
     private BufferedReader in;
-    private PrintWriter out;
+    public PrintWriter out;
     private int NumarClienti = 0;
+    private Main mn;
 
-    public ClientAdministrator(SSLSocket socket) throws IOException, SQLException
+    public ClientAdministrator(SSLSocket socket,final Main mn,FlightService ctr) throws IOException, SQLException
     {
+        this.ctr = ctr;
+        this.mn = mn;
         this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);

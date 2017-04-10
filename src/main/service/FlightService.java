@@ -1,13 +1,12 @@
 package service;
 
-import observer.Observable;
 import model.Flight;
-import repository.FlightRepo;
+import observer.Observable;
 import observer.Observer;
+import repository.FlightRepo;
 
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 public class FlightService implements Observable<Flight>
 {
     private FlightRepo repo;
@@ -56,6 +55,7 @@ public class FlightService implements Observable<Flight>
         repo.deleteFlight(c.getFlightId());
         if (repo.findById(c.getFlightId()) == null)
             notifyObservers();
+
     }
     public List<Flight> findByDestinationAndDate(String dest, java.sql.Date dat)
     {
