@@ -1,9 +1,5 @@
 package service;
 
-/**
- * Created by Dragos on 3/23/2017.
- */
-
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,45 +8,27 @@ import main.Main;
 public class LoginService
 {
     private UserManager manager;
-    @FXML private TextField user;
-    @FXML private PasswordField password;
-    @FXML private Button loginButton;
-    @FXML private Button modificaButton;
 
-    public void initialize()
+    public LoginService()
     {
-        password.setPromptText("Your password");
-        user.setPromptText("Your username");
         manager=new UserManager();
-        modificaButton.setVisible(true);
     }
 
-    public void initManager(final Main loginManager)
+    public String initManager(String username,String passwords)
     {
-        loginButton.setOnAction(new EventHandler<ActionEvent>()
-        {
-            public void handle(ActionEvent event)
-            {
-                String sessionID = login();
+                String sessionID = login(username,passwords);
                 if (sessionID.compareTo("error")!=0)
                 {
-                    loginManager.authenticated();
+                    return "valid";
                 }
                 else
                 {
-                    showErrorMessage("Nume invalid sau parola invalida");
-                    user.setText("");
-                    password.setText("");
+                    return "invalid";
                 }
-            }
-        });
-
     }
 
-    @FXML private void registerUser()
+    @FXML private void registerUser(String username,String passwords)
     {
-        String username = user.getText();
-        String passwords = password.getText();
         if (username == null)
         {
             showErrorMessage("Dati un username");
@@ -69,10 +47,8 @@ public class LoginService
         }
     }
 
-    private String login()
+    private String login(String username,String passwords)
     {
-        String username = user.getText();
-        String passwords = password.getText();
         if (manager.autentificare(username,passwords)==1)
         {
             return "success";

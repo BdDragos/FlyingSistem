@@ -1,13 +1,12 @@
 package service;
 
-import observer.Observable;
 import model.Flight;
-import repository.FlightRepo;
+import observer.Observable;
 import observer.Observer;
+import repository.FlightRepo;
 
-import java.sql.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 public class FlightService implements Observable<Flight>
 {
     private FlightRepo repo;
@@ -16,11 +15,6 @@ public class FlightService implements Observable<Flight>
     public FlightService(FlightRepo frep)
     {
         this.repo = frep;
-    }
-
-    public FlightService()
-    {
-
     }
 
     public List<Flight> getAllFlights()
@@ -34,11 +28,19 @@ public class FlightService implements Observable<Flight>
 
     }
 
-    public int buyFlight(Flight f)
+    public int buyFlight(int idf, String client,int noticket,String address)
     {
-        repo.updateFlight(f);
-        Flight cop = repo.findById(f.getFlightId());
-        if (cop.getFreeseats() == f.getFreeseats() - 1)
+        Flight cop = repo.findById(idf);
+        int nrorig = cop.getFreeseats();
+        if (nrorig < noticket)
+        {
+            return 1;
+        }
+
+        repo.updateFlight(cop,client,noticket,address);
+        cop = repo.findById(idf);
+
+        if (cop.getFreeseats() == nrorig - noticket)
         {
             notifyObservers();
             return 1;
@@ -53,13 +55,33 @@ public class FlightService implements Observable<Flight>
         repo.deleteFlight(c.getFlightId());
         if (repo.findById(c.getFlightId()) == null)
             notifyObservers();
+
     }
-    public Flight findByDestination(String dest,Date dat)
+    public List<Flight> findByDestinationAndDate(String dest, java.sql.Date dat)
     {
-        Flight ret = repo.findByDestinationAndDate(dest,dat);
-        if (ret != null)
+        List<Flight> rez;
+        rez = repo.findByDestinationAndDate(dest,dat);
+        if (rez != null)
             notifyObservers();
-        return ret;
+        return rez;
+    }
+
+    public List<Flight> findByDestination(String dest)
+    {
+        List<Flight> rez;
+        rez = repo.findByDestination(dest);
+        if (rez != null)
+            notifyObservers();
+        return rez;
+    }
+
+    public List<Flight> findByDate(java.sql.Date dat)
+    {
+        List<Flight> rez;
+        rez = repo.findByDate(dat);
+        if (rez != null)
+            notifyObservers();
+        return rez;
     }
 
 

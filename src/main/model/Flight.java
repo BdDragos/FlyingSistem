@@ -1,15 +1,15 @@
 package model;
-import java.util.Date;
-/**
- * Created by Dragos on 3/15/2017.
- */
-public class Flight
+import java.io.Serializable;
+import java.sql.Date;
+
+public class Flight implements Serializable
 {
+    private static final long serialVersionUID = 5950169519310163575L;
     private int flightId;
     private String destination;
     private String airport;
     private int freeseats;
-    private Date datehour;
+    private java.sql.Date datehour;
 
     public Flight(int id, String destin, String airp, int frst, Date dh)
     {

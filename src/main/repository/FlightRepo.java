@@ -1,16 +1,13 @@
 package repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import model.Flight;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.util.*;
 
-@Configuration
 public class FlightRepo
 {
     private List<Flight> flights = new ArrayList<Flight>();
@@ -29,7 +26,6 @@ public class FlightRepo
 
             statement = connection.createStatement();
             statement.execute("USE flights");
-            System.out.println(connection.getCatalog());
         }
         catch (Exception e)
         {
@@ -49,24 +45,42 @@ public class FlightRepo
             flights.add(flight);
         }
     }
-    @Bean
+
     public List<Flight> getAll()
     {
         return flights;
     }
 
-    @Bean
-    public Flight findByDestinationAndDate(String dest, Date data)
-    {
-        for(Flight flight : flights)
-            if(flight.getDestination().equals(dest) && flight.getDatehour().equals(data))
-                return flight;
 
-        return null;
+    public List<Flight> findByDestinationAndDate(String dest, Date data)
+    {
+        List<Flight> rez = new ArrayList<Flight>();
+        for(Flight flight : flights)
+            if(flight.getDestination().equals(dest) && flight.getDatehour().compareTo(data) == 0)
+                rez.add(flight);
+        return rez;
     }
 
-    @Bean
-    public void updateFlight(Flight flight)
+    public List<Flight> findByDestination(String dest)
+    {
+        List<Flight> rez = new ArrayList<Flight>();
+        for(Flight flight : flights)
+            if(flight.getDestination().equals(dest))
+                rez.add(flight);
+        return rez;
+    }
+
+    public List<Flight> findByDate(Date data)
+    {
+        List<Flight> rez = new ArrayList<Flight>();
+        for(Flight flight : flights)
+            if(flight.getDatehour().compareTo(data) == 0)
+                rez.add(flight);
+        return rez;
+    }
+
+
+    public void updateFlight(Flight flight,String client,int noticket,String address)
     {
         for (Flight f: flights)
         {
@@ -74,13 +88,31 @@ public class FlightRepo
             {
                 try
                 {
-                    String query = "update routes set FreeSeats=FreeSeats-1 where Id = ?";
+                    String query = "update routes set FreeSeats=FreeSeats-? where Id = ?";
                     PreparedStatement preparedStmt = connection.prepareStatement(query);
                     int id = flight.getFlightId();
-                    id=id+1;
-                    preparedStmt.setInt(1, id);
+                    preparedStmt.setInt(1, noticket);
+                    preparedStmt.setInt(2, id);
                     preparedStmt.executeUpdate();
-                    flights.get(f.getFlightId()).setFreeseats(f.getFreeseats()-1);
+
+                    int bilete =  flights.get(flight.getFlightId()-1).getFreeseats();
+                    flights.get(flight.getFlightId()-1).setFreeseats(bilete-noticket);
+                    String s = flight.toString();
+                    if (flights.get(flight.getFlightId()-1).getFreeseats() == 0)
+                    {
+                        deleteFlight(flight.getFlightId());
+                    }
+
+                    String query2 = " insert into clients (Name,Address,NoTickets,Flight)"
+                            + " values (?, ?, ?, ?)";
+
+                    PreparedStatement preparedStmt2 = connection.prepareStatement(query2);
+                    preparedStmt2.setString (1, client);
+                    preparedStmt2.setString (2, address);
+                    preparedStmt2.setInt   (3, noticket);
+                    preparedStmt2.setString   (4, s);
+                    preparedStmt2.execute();
+
                 }
                 catch (Exception e)
                 {
@@ -90,7 +122,7 @@ public class FlightRepo
             }
         }
     }
-    @Bean
+
     public void deleteFlight(int id)
     {
         for (Flight f: flights)
@@ -113,7 +145,7 @@ public class FlightRepo
             }
         }
     }
-    @Bean
+
     public Flight findById(int id)
     {
         for (Flight f: flights)

@@ -1,115 +1,71 @@
-/**
- * Created by Dragos on 3/16/2017.
- */
-
 package main;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TabPane;
+
 import repository.FlightRepo;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
+import service.FlightService;
 
-import java.io.*;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import java.io.IOException;
 import java.sql.SQLException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import javafx.scene.layout.AnchorPane;
-import service.LoginService;
-import java.net.URL;
+import java.util.ArrayList;
 
-@Configuration
-public class Main extends Application
+public class Main
 {
-    private FXMLLoader loader;
-    private FXMLLoader loader2;
-    private Stage primaryStage;
-    private AnchorPane rootLayout1;
-    private TabPane rootLayout2;
-
-
-    @Bean
-    private static void execute(String sql) throws SQLException
-    {
-        System.out.println("Executing sql " + sql);
-        System.out.println(new FlightRepo().getAll());
-    }
-    @Bean
+    private SSLServerSocketFactory socketFactory;
+    private SSLServerSocket serverSocket;
+    private SSLSocket socket;
+    private static FlightRepo repo;
+    private static FlightService ctr;
+    private ArrayList<ClientAdministrator> al = new ArrayList<ClientAdministrator>();
+    private int i = 1;
     public static void main(String[] args) throws ClassNotFoundException, SQLException
     {
-        launch(args);
+        repo = new FlightRepo();
+        ctr = new FlightService(repo);
+        Main mn = new Main();
+        mn.startserver();
     }
 
     public void startserver()
     {
-        LoginServer server = null;
-        try
-        {
-            server = new LoginServer();
-        }
-        catch (Exception e)
-        {
+        try {
+            socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
+            System.err.println("Waiting for connection...");
+
+            while (true) {
+                socket = (SSLSocket) serverSocket.accept();
+                String[] cipherSuites = socketFactory.getSupportedCipherSuites();
+                socket.setEnabledCipherSuites(cipherSuites);
+                System.out.println("Connection established: " + " " + i);
+                ClientAdministrator cl = new ClientAdministrator(socket, this, ctr);
+                Runnable r = cl;
+                Thread t = new Thread(r);
+                t.start();
+                al.add(cl);
+                i++;
+            }
+        } catch (IOException ex) {
+            System.err.println("Eroare :" + ex.getMessage());
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+                i--;
+            } catch (IOException ex2) {
+            }
         }
-        server.runServer(this);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws ClassNotFoundException, SQLException
+    void broadcastMsg()
     {
-        this.primaryStage = primaryStage;
-        loader = new FXMLLoader();
-        loader2 = new FXMLLoader();
-        startserver();
-        //LoginView();
-    }
-
-    public void authenticated()
-    {
-        MainView();
-    }
-
-    private void LoginView() throws ClassNotFoundException, SQLException
-    {
-        try
-        {
-            String pathToFxml = "src/main/resources/LoginWindow.fxml";
-            URL fxmlUrl = new File(pathToFxml).toURI().toURL();
-            loader.setLocation(fxmlUrl);
-
-            rootLayout1 = loader.load();
-            Scene scene = new Scene(rootLayout1);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-
-            LoginService controller = loader.getController();
-            controller.initManager(this);
-        }
-
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
+        for (int j = 0; j < al.size(); ++j) {
+            ClientAdministrator ch = al.get(j);
+            ch.out.println("Updatare");
         }
     }
-
-    private void MainView()
-    {
-        try
-        {
-            String pathToFxml = "src/main/resources/MainWindow.fxml";
-            URL fxmlUrl = new File(pathToFxml).toURI().toURL();
-            loader2.setLocation(fxmlUrl);
-
-            rootLayout2 = loader2.load();
-            Scene scene = new Scene(rootLayout2);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        }
-
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
 }
+
+

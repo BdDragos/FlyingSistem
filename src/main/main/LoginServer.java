@@ -1,55 +1,30 @@
 package main;
 
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import java.io.*;
+import service.LoginService;
 
 /**
  * Created by Dragos on 3/29/2017.
  */
 public class LoginServer
 {
-    private static final String CORRECT_USER_NAME = "Java";
-
-    private static final String CORRECT_PASSWORD = "Java";
-
-    private SSLServerSocketFactory socketFactory;
-    private SSLServerSocket serverSocket;
+    private LoginService logmanager;
 
     public LoginServer() throws Exception
     {
-        this.socketFactory = (SSLServerSocketFactory) SSLServerSocketFactory
-                .getDefault();
-        serverSocket = (SSLServerSocket) socketFactory.createServerSocket(7070);
+        logmanager = new LoginService();
     }
 
-    public void runServer(final Main loginManager) {
-        while (true) {
-            try {
-                System.err.println("Waiting for connection...");
-                SSLSocket socket = (SSLSocket) serverSocket.accept();
-                System.out.println("Connected");
-                String[] cipherSuites = socketFactory.getSupportedCipherSuites();
-                socket.setEnabledCipherSuites(cipherSuites);
-                BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-                String userName = input.readLine();
-                String password = input.readLine();
-                if (userName.equals(CORRECT_USER_NAME) && password.equals(CORRECT_PASSWORD)) {
-                    //loginManager.authenticated();
-                    output.println("Valid");
+    public int runServer(String userName,String password)
+    {
+        while (true)
+        {
+                String validare = logmanager.initManager(userName,password);
+                if (validare.compareTo("valid") == 0)
+                {
+                    return 1;
                 } else {
-                    output.println("Invalid");
+                    return 0;
                 }
-                output.close();
-                input.close();
-                socket.close();
-
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
         }
     }
     }
